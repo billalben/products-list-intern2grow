@@ -1,16 +1,13 @@
-import React from 'react';
+import React from "react";
 
-const Total = (props) => {
-    const {items} = props;
-    let total = 0
-    for (let i = 0; i < items.length; i++) {
-        total += parseFloat(items[i].price)
-    }
-    return (
-        <div>
-            <p className="text">Total Price: {total}</p>
-        </div>
-    )
-}
+const Total = ({ items }) => {
+  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-export default Total
+  return (
+    <div>
+      <p className="text">Total Price: {total}</p>
+    </div>
+  );
+};
+
+export default Total;

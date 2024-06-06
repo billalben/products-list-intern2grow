@@ -1,38 +1,49 @@
-import React, {Component} from 'react';
+import React, { useRef } from "react";
 
-class addItem extends Component {
-    state = {
-        product: '',
-        price: ''
-    }
+const AddItem = ({ addItem }) => {
+  const productRef = useRef("");
+  const priceRef = useRef("");
+  const quantityRef = useRef("");
 
-    handleChange = (e) => {
-        console.log(e.target.id + ": " + e.target.value)
-        this.setState({
-            [e.target.id]: e.target.value
-        })
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addItem({
+      product: productRef.current.value,
+      price: parseFloat(priceRef.current.value),
+      quantity: parseInt(quantityRef.current.value),
+    });
+    productRef.current.value = "";
+    priceRef.current.value = "";
+    quantityRef.current.value = "";
+  };
 
-    handleSubmit = (e) => {
-        e.preventDefault()
-        this.props.add(this.state)
-        this.setState({
-            product: '',
-            price: ''
-        })
-    }
+  return (
+    <div className="item">
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          ref={productRef}
+          placeholder="Enter Product"
+          required
+        />
+        <input
+          type="number"
+          ref={priceRef}
+          placeholder="Enter Price"
+          min={1}
+          required
+        />
+        <input
+          type="number"
+          ref={quantityRef}
+          placeholder="Enter Quantity"
+          min={1}
+          required
+        />
+        <input type="submit" value="Add" />
+      </form>
+    </div>
+  );
+};
 
-    render(){
-        return(
-            <div className="item">
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" value={this.state.product} placeholder="Enter Product" id="product" onChange={this.handleChange} required/>
-                    <input type="number" value={this.state.price} placeholder="Enter Price" id="price" onChange={this.handleChange} required/>
-                    <input type="submit" value="Add"/>
-                </form>
-            </div>
-        )
-    }
-}
-
-export default addItem;
+export default AddItem;
