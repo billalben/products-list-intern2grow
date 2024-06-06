@@ -1,24 +1,41 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Items from "./components/item/items";
 import AddItem from "./components/addItem/addItem";
 import Total from "./components/total/total";
 
 const App = () => {
-  const [items, setItems] = useState([
+  const initialItems = [
     { id: 1, product: "Pen", price: 2, quantity: 2 },
     { id: 2, product: "Book", price: 10, quantity: 1 },
-  ]);
+  ];
+
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const storedItems = localStorage.getItem("items");
+    if (storedItems) setItems(JSON.parse(storedItems));
+    else setItems(initialItems);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const saveItemsToLocalStorage = (items) => {
+    localStorage.setItem("items", JSON.stringify(items));
+  };
 
   const deleteItem = (id) => {
     const updatedItems = items.filter((item) => item.id !== id);
     setItems(updatedItems);
+    saveItemsToLocalStorage(updatedItems);
   };
 
   const addItem = (item) => {
     const newId = items.length > 0 ? items[items.length - 1].id + 1 : 1;
     const newItem = { ...item, id: newId };
-    setItems([...items, newItem]);
+    const updatedItems = [...items, newItem];
+    setItems(updatedItems);
+    saveItemsToLocalStorage(updatedItems);
   };
 
   return (
